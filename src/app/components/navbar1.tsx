@@ -78,16 +78,18 @@ export default function Navigation1() {
               <Link href="/team" className="text-black text-sm font-Montserrat">Pages</Link>
             </div>
   
-            {/* Right Side Items: Login & Icons */}
             <div className="flex items-center space-x-8">
-            <nav className="flex items-center">
-              <Link href="/login" className="flex items-center text-white">
-                <Image src="/but.png" alt="button" width={12} height={12} />
-                <p className="text-custom-blue font-bold text-sm font-Montserrat ml-2">Login/ <Link href="/register"
-    className="text-custom-blue font-bold">Register
-  </Link></p>
-              </Link>
-            </nav>
+          <nav className="flex items-center">
+  <Link href="/login" className="flex items-center text-white">
+    <Image src="/but.png" alt="button" width={12} height={12} />
+    <p className="text-custom-blue font-bold text-sm font-Montserrat ml-2">
+      Login/
+    </p>
+  </Link>
+  <Link href="/register" className="text-custom-blue font-bold">
+    Register
+  </Link>
+</nav>
   
               {/* Social Media Icons */}
               <div className="flex items-center space-x-4">

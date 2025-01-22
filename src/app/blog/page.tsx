@@ -28,7 +28,7 @@ async function getdata() {
       title,
       price,
       "imageUrl": productImage.asset->url,
-      tags,
+      
     }
   `);
   return fetchData;
