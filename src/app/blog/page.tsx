@@ -22,17 +22,22 @@ interface CartItem extends Product {
 }
 
 async function getdata() {
-  const fetchData = await client.fetch(`
-    *[_type == "product"][0..23]{
-      _id,
-      title,
-      price,
-      "imageUrl": productImage.asset->url,
-      
-    }
-  `);
-  return fetchData;
+  try {
+    const fetchData = await client.fetch(`
+      *[_type == "product"][0..23]{
+        _id,
+        title,
+        price,
+        "imageUrl": productImage.asset->url,
+      }
+    `);
+    return fetchData;
+  } catch (error) {
+    console.error("Error fetching product data:", error);
+    return []; // Return an empty array in case of error
+  }
 }
+
 
 export default function Blog() {
   const [cart, setCart] = useState<CartItem[]>([]);  // Cart state to hold items
