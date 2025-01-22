@@ -11,8 +11,9 @@ import Link from "next/link";
 interface Product {
   _id: string;
   title: string;
-  imageUrl: string;
+  imageUrl: string | null;
   price: number;
+  description:string;
   tags: string[] | undefined;
 }
 
@@ -21,6 +22,7 @@ interface CartItem extends Product {
   quantity: number;
 }
 
+// Fetch data from Sanity
 async function getdata() {
   try {
     const fetchData = await client.fetch(`
@@ -28,7 +30,9 @@ async function getdata() {
         _id,
         title,
         price,
-        "imageUrl": productImage.asset->url,
+        tags,
+        description,
+        "imageUrl": productImage.asset->url
       }
     `);
     return fetchData;
@@ -38,13 +42,12 @@ async function getdata() {
   }
 }
 
-
 export default function Blog() {
-  const [cart, setCart] = useState<CartItem[]>([]);  // Cart state to hold items
-  const [data, setData] = useState<Product[]>([]);  // Product data from Sanity
-  const [showCart, setShowCart] = useState(false);  // For toggling the cart visibility
+  const [cart, setCart] = useState<CartItem[]>([]); // Cart state to hold items
+  const [data, setData] = useState<Product[]>([]); // Product data from Sanity
+  const [showCart, setShowCart] = useState(false); // For toggling the cart visibility
 
-  // Fetch data when the component mounts
+  // Fetch product data when the component mounts
   useEffect(() => {
     const fetchData = async () => {
       const fetchedData = await getdata();
@@ -57,14 +60,22 @@ export default function Blog() {
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
-      setCart(JSON.parse(storedCart));
+      try {
+        setCart(JSON.parse(storedCart));
+      } catch (error) {
+        console.error("Error parsing cart from localStorage:", error);
+      }
     }
   }, []);
 
   // Update cart in localStorage whenever it changes
   useEffect(() => {
     if (cart.length > 0) {
-      localStorage.setItem("cart", JSON.stringify(cart));
+      try {
+        localStorage.setItem("cart", JSON.stringify(cart));
+      } catch (error) {
+        console.error("Error saving cart to localStorage:", error);
+      }
     }
   }, [cart]);
 
@@ -97,7 +108,7 @@ export default function Blog() {
   return (
     <section>
       <Navigation1 />
-      <section className="mx-auto max-w-2xl px-4 sm:pb-6 lg:max-w-7xl lg:px-8 ">
+      <section className="mx-auto max-w-2xl px-4 sm:pb-6 lg:max-w-7xl lg:px-8">
         <div className="mb-8 flex flex-wrap justify-between md:mb-16">
           <div className="mb-6 flex w-full flex-col justify-center sm:mb-12 lg:mb-0 lg:w-1/3 lg:pb-24 lg:pt-48">
             <h1 className="mb-4 text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 sm:text-5xl md:mb-8 md:text-6xl shadow-lg drop-shadow-xl">
@@ -126,9 +137,12 @@ export default function Blog() {
               </div>
               <div className="p-4">
                 <h3 className="text-xl font-semibold text-gray-900">{val.title}</h3>
-                <p className="text-sm text-gray-600 mt-2">
+                <p className=" text-green-600 mt-2 text-base font-sans font-medium">
                   {val.tags && val.tags.length > 0 ? val.tags.join(", ") : "No Tags"}
                 </p>
+                <p className="text-sm text-gray-800 mt-2 line-clamp-3">
+  {val.description}
+</p>
                 <div className="mt-4 flex items-center justify-between">
                   <span className="text-lg font-semibold text-gray-800">${val.price}</span>
                   <button
@@ -154,7 +168,7 @@ export default function Blog() {
       {showCart && (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center z-10">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-2xl font-bold text-center  mb-4 text-lime-700 ">Your Cart</h2>
+            <h2 className="text-2xl font-bold text-center mb-4 text-lime-700">Your Cart</h2>
             <div className="space-y-4">
               {cart.length === 0 ? (
                 <p>Your cart is empty!</p>
@@ -210,13 +224,11 @@ export default function Blog() {
       )}
 
       {cart.length > 0 && (
-       <div className="fixed bottom-16 right-2 bg-green-500 text-white rounded-full p-4 cursor-pointer mb-6 hover:text-fuchsia-500 hover:bg-blue-500">
-       <Link href="/checkout"
-          className="px-1 py-2 rounded-lg text-white font-bold">
-           Proceed to Checkout
-         
-       </Link>
-     </div>
+        <div className="fixed bottom-16 right-2 bg-green-500 text-white rounded-full p-4 cursor-pointer mb-6 hover:text-fuchsia-500 hover:bg-blue-500">
+          <Link href="/checkout" className="px-1 py-2 rounded-lg text-white font-bold">
+            Proceed to Checkout
+          </Link>
+        </div>
       )}
       <Footer />
     </section>
