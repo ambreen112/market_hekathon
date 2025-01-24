@@ -11,7 +11,7 @@ export default function Men() {
         {/* Image Section */}
         <div className="relative mb-6">
           <Image
-            src="/filter-3.png"
+            src="/filter-4.png"
             alt="man fashion"
             width={209}
             height={300}

@@ -8,8 +8,8 @@ function Profile() {
 
   if (!user) {
     return (
-      <div className="flex justify-center items-center  bg-gray-100">
-        <div className="text-xl font-semibold text-gray-700">
+      <div className="flex justify-center items-center  bg-black ">
+        <div className="text-2xl font-semibold text-lime-700">
           Please Login
         </div>
       </div>

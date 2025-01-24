@@ -2,7 +2,7 @@
 
 import React, { useState, useContext } from "react";
 import UserContext from "../../context/UserContext";
-
+import Link from "next/link";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -20,8 +20,9 @@ function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-  <h1 className="text-3xl font-serif font-bold text-gray-800 mb-6">Login</h1>
+    <>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-black p-3">
+  <h1 className="text-3xl font-serif font-bold text-white mb-6">Login</h1>
   <form onSubmit={handleSubmit} className="w-full max-w-sm bg-white p-8 rounded-lg shadow-lg">
     <div className="mb-4">
       <input
@@ -49,7 +50,15 @@ function Login() {
     </button>
   </form>
 </div>
+<div className="bg-black p-6 flex justify-center">
+  <Link href={"/"}>
+    <button className="text-3xl font-Roboto text-white bg-gradient-to-r from-blue-500 to-purple-500 px-8 py-4 rounded-lg shadow-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:bg-gradient-to-l">
+      Go to Home
+    </button>
+  </Link>
+</div>
 
+</>
   );
 }
 

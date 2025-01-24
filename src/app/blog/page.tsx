@@ -119,6 +119,7 @@ export default function Blog() {
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {data.map((val: Product, i: number) => (
+            
             <div key={i} className="bg-white border rounded-lg shadow-md">
               <div className="relative h-64 w-full">
                 {val.imageUrl ? (
@@ -129,6 +130,7 @@ export default function Blog() {
                     style={{ objectFit: "cover" }}
                     className="rounded-t-lg"
                   />
+                 
                 ) : (
                   <div className="bg-gray-200 flex justify-center items-center h-full text-gray-500">
                     No Image
