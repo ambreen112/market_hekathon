@@ -1,56 +1,70 @@
 'use client'; // Mark the component as client-side rendered
 
 import Image from "next/image";
-import { client } from "@/sanity/lib/client";
+import SanityClient from "@sanity/client";
 import Navigation1 from "../components/navbar1";
 import { useState, useEffect } from "react";
 import Footer from "../components/footer";
 import Link from "next/link";
 
-// Define the correct type for the product data returned from Sanity
-interface Product {
+const sanity = SanityClient({
+  projectId: "vtpqxnkz",
+  dataset: "production",
+  apiVersion: "2023-01-01",
+  useCdn: true,
+});
+
+// File: src/sanity/schemaTypes/product.ts
+
+export interface Product {
   _id: string;
   title: string;
-  imageUrl: string | null;
+  quantity:number
   price: number;
-  description:string;
-  tags: string[] | undefined;
+  tags: string[];
+  description: string;
+  discountPercentage?: number;
+  productImage?: {
+    asset: {
+      _ref: string;
+    };
+  };
+  imageUrl?: string;
 }
 
-// Define CartItem type to include quantity
-interface CartItem extends Product {
-  quantity: number;
-}
 
-// Fetch data from Sanity
-async function getdata() {
+
+
+// Fetch products from Sanity
+const fetchProducts = async (): Promise<Product[]> => {
   try {
-    const fetchData = await client.fetch(`
-      *[_type == "product"][0..23]{
-        _id,
-        title,
-        price,
-        tags,
-        description,
-        "imageUrl": productImage.asset->url
-      }
-    `);
-    return fetchData;
+    const query = `*[_type == "product"][0..23]{
+      _id,
+      title,
+      price,
+      tags,
+      description,
+      discountPercentage,
+      "imageUrl": productImage.asset->url
+    }`;
+
+    const data = await sanity.fetch(query);
+    return data;
   } catch (error) {
-    console.error("Error fetching product data:", error);
-    return []; // Return an empty array in case of error
+    console.log("Error fetching products:", error);
+    return [];
   }
-}
+};
 
 export default function Blog() {
-  const [cart, setCart] = useState<CartItem[]>([]); // Cart state to hold items
+  const [cart, setCart] = useState<Product[]>([]); // Cart state to hold items
   const [data, setData] = useState<Product[]>([]); // Product data from Sanity
   const [showCart, setShowCart] = useState(false); // For toggling the cart visibility
 
   // Fetch product data when the component mounts
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedData = await getdata();
+      const fetchedData = await fetchProducts();
       setData(fetchedData);
     };
     fetchData();
@@ -118,19 +132,17 @@ export default function Blog() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {data.map((val: Product, i: number) => (
-            
-            <div key={i} className="bg-white border rounded-lg shadow-md">
+          {data.map((product) => (
+            <div key={product._id} className="bg-white border rounded-lg shadow-md">
               <div className="relative h-64 w-full">
-                {val.imageUrl ? (
+                {product.imageUrl ? (
                   <Image
-                    src={val.imageUrl}
-                    alt={val.title}
-                    fill
-                    style={{ objectFit: "cover" }}
+                    src={product.imageUrl}
+                    alt={product.title}
+                    layout="fill"
+                    objectFit="cover"
                     className="rounded-t-lg"
                   />
-                 
                 ) : (
                   <div className="bg-gray-200 flex justify-center items-center h-full text-gray-500">
                     No Image
@@ -138,17 +150,15 @@ export default function Blog() {
                 )}
               </div>
               <div className="p-4">
-                <h3 className="text-xl font-semibold text-gray-900">{val.title}</h3>
-                <p className=" text-green-600 mt-2 text-base font-sans font-medium">
-                  {val.tags && val.tags.length > 0 ? val.tags.join(", ") : "No Tags"}
+                <h3 className="text-xl font-semibold text-gray-900">{product.title}</h3>
+                <p className="text-green-600 mt-2 text-base font-sans font-medium">
+                  {product.tags?.length > 0 ? product.tags.join(", ") : "No Tags"}
                 </p>
-                <p className="text-sm text-gray-800 mt-2 line-clamp-3">
-  {val.description}
-</p>
+                <p className="text-sm text-gray-800 mt-2 line-clamp-3">{product.description}</p>
                 <div className="mt-4 flex items-center justify-between">
-                  <span className="text-lg font-semibold text-gray-800">${val.price}</span>
+                  <span className="text-lg font-semibold text-gray-800">${product.price}</span>
                   <button
-                    onClick={() => addToCart(val)}
+                    onClick={() => addToCart(product)}
                     className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                   >
                     Add to Cart
@@ -232,6 +242,7 @@ export default function Blog() {
           </Link>
         </div>
       )}
+
       <Footer />
     </section>
   );
