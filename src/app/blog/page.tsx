@@ -1,39 +1,27 @@
 'use client'; // Mark the component as client-side rendered
 
 import Image from "next/image";
-import SanityClient from "@sanity/client";
+
 import Navigation1 from "../components/navbar1";
 import { useState, useEffect } from "react";
 import Footer from "../components/footer";
 import Link from "next/link";
+import { client } from "@/sanity/lib/client";
 
-const sanity = SanityClient({
-  projectId: "vtpqxnkz",
-  dataset: "production",
-  apiVersion: "2023-01-01",
-  useCdn: true,
-});
 
-// File: src/sanity/schemaTypes/product.ts
 
+
+// Interface for Product
 export interface Product {
   _id: string;
   title: string;
-  quantity:number
+  quantity: number;
   price: number;
   tags: string[];
   description: string;
   discountPercentage?: number;
-  productImage?: {
-    asset: {
-      _ref: string;
-    };
-  };
-  imageUrl?: string;
+  imageUrl?: string; // This corresponds to the "imageUrl" alias in your query
 }
-
-
-
 
 // Fetch products from Sanity
 const fetchProducts = async (): Promise<Product[]> => {
@@ -48,7 +36,7 @@ const fetchProducts = async (): Promise<Product[]> => {
       "imageUrl": productImage.asset->url
     }`;
 
-    const data = await sanity.fetch(query);
+    const data = await client.fetch(query);
     return data;
   } catch (error) {
     console.log("Error fetching products:", error);
@@ -60,6 +48,10 @@ export default function Blog() {
   const [cart, setCart] = useState<Product[]>([]); // Cart state to hold items
   const [data, setData] = useState<Product[]>([]); // Product data from Sanity
   const [showCart, setShowCart] = useState(false); // For toggling the cart visibility
+
+  
+
+
 
   // Fetch product data when the component mounts
   useEffect(() => {
@@ -132,41 +124,43 @@ export default function Blog() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {data.map((product) => (
-            <div key={product._id} className="bg-white border rounded-lg shadow-md">
-              <div className="relative h-64 w-full">
-                {product.imageUrl ? (
-                  <Image
-                    src={product.imageUrl}
-                    alt={product.title}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-t-lg"
-                  />
-                ) : (
-                  <div className="bg-gray-200 flex justify-center items-center h-full text-gray-500">
-                    No Image
-                  </div>
-                )}
-              </div>
-              <div className="p-4">
-                <h3 className="text-xl font-semibold text-gray-900">{product.title}</h3>
-                <p className="text-green-600 mt-2 text-base font-sans font-medium">
-                  {product.tags?.length > 0 ? product.tags.join(", ") : "No Tags"}
-                </p>
-                <p className="text-sm text-gray-800 mt-2 line-clamp-3">{product.description}</p>
-                <div className="mt-4 flex items-center justify-between">
-                  <span className="text-lg font-semibold text-gray-800">${product.price}</span>
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+        {data.map((product) => (
+  <div key={product._id} className="bg-white border rounded-lg shadow-md">
+    <div className="relative h-64 w-full">
+    {product.imageUrl ? (
+    <Image
+      src={product.imageUrl} // Corrected from product.imageUr to product.imageUrl
+      alt={product.title}
+      layout="fill"
+      objectFit="cover"
+      className="rounded-t-lg"
+    />
+  ) : (
+        <div className="bg-gray-200 flex justify-center items-center h-full text-gray-500">
+          No Image
+        </div>
+      )}
+    </div>
+    <div className="p-4">
+      <h3 className="text-xl font-semibold text-gray-900">{product.title}</h3>
+      <p className="text-green-600 mt-2 text-base font-sans font-medium">
+        {product.tags?.length > 0 ? product.tags.join(", ") : "No Tags"}
+      </p>
+      <p className="text-sm text-gray-800 mt-2 line-clamp-3">{product.description}</p>
+      <div className="mt-4 flex items-center justify-between">
+        <span className="text-lg font-semibold text-gray-800">${product.price}</span>
+        <button
+          onClick={() => addToCart(product)}
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+        >
+          Add to Cart
+        </button>
+      </div>
+    </div>
+  </div>
+))}
+
+        
         </div>
       </section>
 
