@@ -28,7 +28,7 @@ export default function Contact() {
 
   {/* Become a Member Button */}
   <div className="bg-sky-500 px-6 py-3 flex rounded-md font-Montserrat font-bold text-white mb-4 items-center justify-center w-full md:w-auto text-center">
-    <button>Become a member</button>
+<Link href="/member">  <button>Become a member</button></Link>
     <Image className="font-bold ml-5" src="/vector11.png" alt="arrow" width={12} height={12} />
   </div>
 </div>

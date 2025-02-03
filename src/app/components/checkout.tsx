@@ -15,9 +15,15 @@ interface CartItem extends Product {
   quantity: number;
 }
 
-export default function Checkout({ cart }: { cart: CartItem[] }) {
+interface CheckoutProps {
+  cart: CartItem[];
+  onCheckout: (orderDetails: { firstName: string; lastName: string; email: string; phoneNumber: string }) => Promise<void>;
+}
+
+const Checkout: React.FC<CheckoutProps> = ({ cart, onCheckout }) => {
   const [loading, setLoading] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Form fields state
   const [name, setName] = useState('');
@@ -33,21 +39,40 @@ export default function Checkout({ cart }: { cart: CartItem[] }) {
     cvv: '',
   });
 
+  // Updated checkout handler
   const handleCheckout = async () => {
-    setLoading(true);
-    try {
-      // Normally, you would call an API to process the payment here
-      const paymentSuccess = true; // Assume payment succeeds for now
+    if (!name || !email || !phone || !area) {
+      setErrorMessage('Please fill in all customer details.');
+      return;
+    }
 
-      if (paymentSuccess) {
-        setOrderSuccess(true);
-        // Clear the cart from localStorage and update state
-        localStorage.removeItem('cart');
-      } else {
-        throw new Error('Payment failed.');
-      }
+    if (paymentMethod === 'card' && (!cardDetails.cardNumber || !cardDetails.expiryDate || !cardDetails.cvv)) {
+      setErrorMessage('Please fill in all card details.');
+      return;
+    }
+
+    setLoading(true);
+    setErrorMessage(null);
+
+    try {
+      // Prepare order details to pass to the onCheckout function
+      const orderDetails = {
+        firstName: name.split(' ')[0], // You can adjust this logic for first name and last name
+        lastName: name.split(' ')[1] || '',
+        email,
+        phoneNumber: phone,
+      };
+
+      // Call the onCheckout function passed from the parent component (CheckoutPage)
+      await onCheckout(orderDetails);
+
+      setOrderSuccess(true);
+      // Clear the cart from localStorage and update state
+      localStorage.removeItem('cart');
     } catch (error) {
       console.error('Error during checkout:', error);
+      setErrorMessage('An error occurred while processing the order. Please try again.');
+    } finally {
       setLoading(false);
     }
   };
@@ -218,7 +243,12 @@ export default function Checkout({ cart }: { cart: CartItem[] }) {
           </button>
         </div>
 
-        {/* Order Success Message */}
+        {/* Order Success or Error Messages */}
+        {errorMessage && (
+          <div className="mt-4 bg-red-200 text-red-900 p-4 rounded-lg">
+            <p className="text-lg font-medium">{errorMessage}</p>
+          </div>
+        )}
         {orderSuccess && (
           <div className="mt-4 bg-lime-200 text-lime-900 p-4 rounded-lg">
             <p className="text-lg font-medium">Order placed successfully! 🎉</p>
@@ -228,4 +258,6 @@ export default function Checkout({ cart }: { cart: CartItem[] }) {
       </div>
     </div>
   );
-}
+};
+
+export default Checkout;

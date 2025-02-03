@@ -1,5 +1,6 @@
 
 import Image from "next/image";
+import Link from "next/link";
 
 
 
@@ -108,7 +109,7 @@ export default function Shop(){
         />
       </div>
       <div className="w-full sm:w-auto">
-        <button className="font-Montserrat font-normal text-[15px] text-white px-10 py-3 border border-gray-400 rounded-md bg-custom-blue-0">
+        <button className="font-Montserrat font-normal text-[16px] text-gray-600 px-10 py-3 border border-gray-600 rounded-md bg-custom-blue-0">
           Filter
         </button>
       </div>
@@ -120,22 +121,23 @@ export default function Shop(){
 {/* Language Section */}
 <div className="w-full h-[175px] bg-custom-light-gray flex justify-center items-center flex-wrap gap-10 sm:gap-20 p-4">
   <div className="flex justify-center items-center">
-    <Image src="/fa1.png" alt="fa1" width={76} height={72} />
+ <Link href="https://www.hoolisoftware.com">  <Image src="/fa1.png" alt="fa1" width={76} height={72} /></Link>
   </div>
   <div className="flex justify-center items-center">
-    <Image src="/fa2.png" alt="fa2" width={76} height={72} />
+  <Link href="https://www.lyft.com"> <Image src="/fa2.png" alt="fa2" width={76} height={72} /></Link>
   </div>
   <div className="flex justify-center items-center">
-    <Image src="/fa3.png" alt="fa3" width={76} height={72} />
+ <Link href="#"> <Image src="/fa3.png" alt="fa3" width={76} height={72} /></Link>
   </div>
   <div className="flex justify-center items-center">
-    <Image src="/fa4.png" alt="fa4" width={76} height={72} />
+ <Link href="https://stripe.com">    <Image src="/fa4.png" alt="fa4" width={76} height={72} /></Link>
   </div>
   <div className="flex justify-center items-center">
-    <Image src="/fa5.png" alt="fa5" width={76} height={72} />
+  <Link href="https://aws.amazon.com">   <Image src="/fa5.png" alt="fa5" width={76} height={72} /></Link>
   </div>
   <div className="flex justify-center items-center">
-    <Image src="/fa6.png" alt="fa6" width={76} height={72} />
+<Link href="https://discord.com/">   <Image src="/fa6.png" alt="fa6" width={76} height={72} /></Link>
+   
   </div>
 </div>
 

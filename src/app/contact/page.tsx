@@ -27,7 +27,7 @@ export default function Contact() {
 
   {/* Become a Member Button */}
   <div className="bg-sky-500 px-6 py-3 flex rounded-md font-Montserrat font-bold text-white mb-4 items-center justify-center w-full md:w-auto text-center">
-    <button>Become a member</button>
+    <Link href="/member"><button>Become a member</button></Link>
     <Image className="font-bold ml-5" src="/vector11.png" alt="arrow" width={12} height={12} />
   </div>
 </div>
@@ -54,12 +54,12 @@ export default function Contact() {
               <p className="font-Montserrat font-bold text-[24px] mt-1">Fax: +451 215 215</p>
             </div>
             <div className="flex mt-7 gap-9 justify-center md:justify-start">
-              <Image src={"/p1.png"} alt="twitter" width={30} height={24.38} />
+      <Link href="https://twitter.com">    <Image src={"/p1.png"} alt="twitter" width={30} height={24.38} /></Link>
               <div className="">
-                <Image src={"/facebook0.png"} alt="facebook" width={30} height={30} />
+         <Link href="https://www.facebook.com"> <Image src={"/facebook0.png"} alt="facebook" width={30} height={30} /></Link>
               </div>
-              <Image src={"/p3.png"} alt="twitter" width={29.98} height={29.98} />
-              <Image src={"/p4.png"} alt="twitter" width={29.98} height={29.98} />
+        <Link href="https://www.instagram.com/">    <Image src={"/p3.png"} alt="twitter" width={29.98} height={29.98} /></Link>
+       <Link href="https://www.linkedin.com/"> <Image src={"/p4.png"} alt="twitter" width={29.98} height={29.98} /></Link>
             </div>
           </div>
           <div className="mt-6 md:mt-0 md:w-1/2 relative">
@@ -96,9 +96,9 @@ export default function Contact() {
           <h6 className="font-Montserrat font-bold text-s">geoorgia.young@example.com</h6>
           <h6 className="font-Montserrat font-bold text-s ml-6">geoorgia.young@ple.com</h6><br />
           <h5 className="font-Montserrat font-bold text-base ml-12">Get Support</h5>
-          <button className="mt-5 ml-8 border-2 border-custom-blue-0 px-7 py-4 font-Montserrat font-bold text-sm text-sky-600 rounded-full hover:bg-sky-600 hover:text-white">
+  <Link href="/request"> <button className="mt-5 ml-8 border-2 border-custom-blue-0 px-7 py-4 font-Montserrat font-bold text-sm text-sky-600 rounded-full hover:bg-sky-600 hover:text-white">
             Submit Request
-          </button>
+          </button></Link>
         </div>
 
         <div className="w-full md:w-[327px] h-[343px] md:h-[403px] px-7 py-4 bg-custom-dark-blue-0">
@@ -106,9 +106,9 @@ export default function Contact() {
           <h6 className="font-Montserrat font-bold text-s text-white">geoorgia.young@example.com</h6>
           <h6 className="font-Montserrat font-bold text-s ml-6 text-white">geoorgia.young@ple.com</h6><br />
           <h5 className="font-Montserrat font-bold text-base ml-12 text-white">Get Support</h5>
-          <button className="mb-20 mt-5 ml-8 border-2 border-custom-blue-0 px-7 py-4 font-Montserrat font-bold text-sm text-sky-600 rounded-full hover:bg-sky-600 hover:text-white">
+     <Link href="/request"> <button className="mb-20 mt-5 ml-8 border-2 border-custom-blue-0 px-7 py-4 font-Montserrat font-bold text-sm text-sky-600 rounded-full hover:bg-sky-600 hover:text-white">
             Submit Request
-          </button>
+          </button></Link>
         </div>
 
         <div className="w-full md:w-[327px] h-[343px] border-2 custom-dotted-border border-dotted border-custom-blue-0 px-7 py-4">
@@ -116,9 +116,9 @@ export default function Contact() {
           <h6 className="font-Montserrat font-bold text-s">geoorgia.young@example.com</h6>
           <h6 className="font-Montserrat font-bold text-s ml-6">geoorgia.young@ple.com</h6><br />
           <h5 className="font-Montserrat font-bold text-base ml-12">Get Support</h5>
-          <button className="ml-8 mt-8 border-2 border-custom-blue-0 px-7 py-4 font-Montserrat font-bold text-sm text-sky-600 rounded-full hover:bg-sky-600 hover:text-white">
+          <Link href="/request">      <button className="ml-8 mt-8 border-2 border-custom-blue-0 px-7 py-4 font-Montserrat font-bold text-sm text-sky-600 rounded-full hover:bg-sky-600 hover:text-white">
             Submit Request
-          </button>
+          </button></Link>
         </div>
       </div>
 

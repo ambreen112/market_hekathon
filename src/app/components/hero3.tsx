@@ -22,7 +22,7 @@ import Image from "next/image"
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {/* Product 1 */}
           <div className="flex flex-col items-center">
-            <Image src="/her1.png" alt="style" width={239} height={427} />
+            <Image  src="/her1.png" alt="style" width={239} height={427} />
             <h5 className="font-Montserrat font-bold text-base mt-5">Graphic Design</h5>
             <p className="font-Montserrat font-bold text-sm text-gray-500 mt-4">English Department</p>
             <div className="flex mt-4 space-x-2">

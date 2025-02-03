@@ -18,17 +18,17 @@ export default function Contact() {
     <Link href="/" className="mr-4 mb-2 md:mb-0 inline-block">Home</Link>
     <Link href="/blog" className="mr-4 mb-2 md:mb-0 inline-block">Product</Link>
     <Link href="#" className="mr-4 mb-2 md:mb-0 inline-block">Pricing</Link>
-    <Link href="#" className="mr-4 mb-2 md:mb-0 inline-block">Contact</Link>
+    <Link href="/contact" className="mr-4 mb-2 md:mb-0 inline-block">Contact</Link>
   </nav>
 
   {/* Login Link */}
   <div className="font-Montserrat font-bold text-sm text-sky-500 mb-3 w-full md:w-auto text-center md:text-left">
-    <Link href="#">Login</Link>
+    <Link href="/login">Login</Link>
   </div>
 
   {/* Become a Member Button */}
   <div className="bg-sky-500 px-6 py-3 flex rounded-md font-Montserrat font-bold text-white mb-4 items-center justify-center w-full md:w-auto text-center">
-    <button>Become a member</button>
+<Link href="/member">  <button>Become a member</button></Link>
     <Image className="font-bold ml-5" src="/vector11.png" alt="arrow" width={12} height={12} />
   </div>
 </div>
@@ -109,7 +109,7 @@ export default function Contact() {
 
     {/* Button Image positioned on top of the video image */}
     <div className="absolute inset-0 flex justify-center items-center">
-      <Image src="/button.png" alt="button" width={92} height={92} />
+ <Link href="https://www.youtube.com/watch?v=JruWsyyP9pw">   <Image src="/button.png" alt="button" width={92} height={92} /></Link>
     </div>
   </div>
 </div>
@@ -184,22 +184,22 @@ export default function Contact() {
     {/* Companies Logos */}
     <div className="w-full flex justify-center gap-9 flex-wrap md:flex-nowrap">
       <div className="flex justify-center items-center mb-4 md:mb-0">
-        <Image src="/fa1.png" alt="fa1" width={76} height={72} />
+      <Link href="https://www.hoolisoftware.com"> <Image src="/fa1.png" alt="fa1" width={76} height={72} /></Link>
       </div>
       <div className="flex justify-center items-center mb-4 md:mb-0">
-        <Image src="/fa2.png" alt="fa2" width={76} height={72} />
+      <Link href="https://www.lyft.com"> <Image src="/fa2.png" alt="fa2" width={76} height={72} /></Link>
       </div>
       <div className="flex justify-center items-center mb-4 md:mb-0">
-        <Image src="/fa3.png" alt="fa3" width={76} height={72} />
+      <Link href="#">    <Image src="/fa3.png" alt="fa3" width={76} height={72} /></Link>
       </div>
       <div className="flex justify-center items-center mb-4 md:mb-0">
-        <Image src="/fa4.png" alt="fa4" width={76} height={72} />
+      <Link href="https://stripe.com">     <Image src="/fa4.png" alt="fa4" width={76} height={72} /></Link>
       </div>
       <div className="flex justify-center items-center mb-4 md:mb-0">
-        <Image src="/fa5.png" alt="fa5" width={76} height={72} />
+      <Link href="https://aws.amazon.com">   <Image src="/fa5.png" alt="fa5" width={76} height={72} /></Link>
       </div>
       <div className="flex justify-center items-center mb-4 md:mb-0">
-        <Image src="/fa6.png" alt="fa6" width={76} height={72} />
+      <Link href="https://discord.com/">     <Image src="/fa6.png" alt="fa6" width={76} height={72} /></Link>
       </div>
     </div>
   </div>

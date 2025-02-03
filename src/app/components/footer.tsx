@@ -9,9 +9,9 @@ import Link from "next/link";
         <div className="flex items-center justify-around bg-slate-100 px-6 py-4">
         <p className="font-Montserrat font-bold text-[24px]">Bandage</p>
         <div className="flex items-center space-x-4">
-          <Image src={"/facebook.png"} alt="Facebook" width={26} height={26} />
-          <Image src={"/instagram.png"} alt="Instagram" width={26} height={26} />
-          <Image src={"/twitter.png"} alt="Twitter" width={26} height={26} />
+        <Link href="https:www.facebook.com" >  <Image src={"/facebook.png"} alt="Facebook" width={26} height={26} /></Link>
+        <Link href="https:www.instagrm.com" >  <Image src={"/instagram.png"} alt="Instagram" width={26} height={26} /></Link>
+          <Link href="https:www.twitter.com" >  <Image src={"/twitter.png"} alt="Twitter" width={26} height={26} /></Link>
         </div>
        </div>
               

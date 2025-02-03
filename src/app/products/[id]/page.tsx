@@ -1,17 +1,13 @@
-'use client'; // Mark the component as client-side rendered
+'use client'
 
-import Image from "next/image";
+import { useEffect, useState } from 'react';
+import { client } from '@/sanity/lib/client';
+import Image from 'next/image';
+import Footer from '@/app/components/footer';
+import Navigation from '@/app/components/navbar';
+import Link from 'next/link';
 
-import Navigation1 from "../components/navbar1";
-import { useState, useEffect } from "react";
-import Footer from "../components/footer";
-import Link from "next/link";
-import { client } from "@/sanity/lib/client";
-
-
-
-
-// Interface for Product
+// Product interface (same as before)
 export interface Product {
   _id: string;
   title: string;
@@ -20,13 +16,13 @@ export interface Product {
   tags: string[];
   description: string;
   discountPercentage?: number;
-  imageUrl?: string; // This corresponds to the "imageUrl" alias in your query
+  imageUrl?: string;
 }
 
-// Fetch products from Sanity
-const fetchProducts = async (): Promise<Product[]> => {
+// Fetch the product data by ID (Sanity query)
+const fetchProductById = async (id: string): Promise<Product | null> => {
   try {
-    const query = `*[_type == "product"][0..23]{
+    const query = `*[_type == "product" && _id == $id][0]{
       _id,
       title,
       price,
@@ -35,42 +31,38 @@ const fetchProducts = async (): Promise<Product[]> => {
       discountPercentage,
       "imageUrl": productImage.asset->url
     }`;
-
-    const data = await client.fetch(query);
-    return data;
+    const data = await client.fetch(query, { id });
+    return data || null;
   } catch (error) {
-    console.log("Error fetching products:", error);
-    return [];
+    console.error('Error fetching product:', error);
+    return null;
   }
 };
 
-export default function Blog() {
-  const [cart, setCart] = useState<Product[]>([]); // Cart state to hold items
-  const [data, setData] = useState<Product[]>([]); // Product data from Sanity
-  const [showCart, setShowCart] = useState(false); // For toggling the cart visibility
+// Dynamic product page component
+export default function ProductPage({ params }: { params: { id: string } }) {
+  const [product, setProduct] = useState<Product | null>(null);
+  const [cart, setCart] = useState<Product[]>([]); // Cart state
+  const [showCart, setShowCart] = useState(false); // Cart visibility state
+  const { id } = params; // Extract product id from URL params
 
-  
-
-
-
-  // Fetch product data when the component mounts
+  // Fetch product data when the component mounts or when the `id` changes
   useEffect(() => {
     const fetchData = async () => {
-      const fetchedData = await fetchProducts();
-      console.log(fetchedData); 
-      setData(fetchedData);
+      const fetchedProduct = await fetchProductById(id);
+      setProduct(fetchedProduct);
     };
     fetchData();
-  }, []);
+  }, [id]);
 
   // Load cart from localStorage (if it exists)
   useEffect(() => {
-    const storedCart = localStorage.getItem("cart");
+    const storedCart = localStorage.getItem('cart');
     if (storedCart) {
       try {
         setCart(JSON.parse(storedCart));
       } catch (error) {
-        console.error("Error parsing cart from localStorage:", error);
+        console.error('Error parsing cart from localStorage:', error);
       }
     }
   }, []);
@@ -79,9 +71,9 @@ export default function Blog() {
   useEffect(() => {
     if (cart.length > 0) {
       try {
-        localStorage.setItem("cart", JSON.stringify(cart));
+        localStorage.setItem('cart', JSON.stringify(cart));
       } catch (error) {
-        console.error("Error saving cart to localStorage:", error);
+        console.error('Error saving cart to localStorage:', error);
       }
     }
   }, [cart]);
@@ -112,66 +104,68 @@ export default function Blog() {
     setShowCart(!showCart);
   };
 
+  if (!product) {
+    return <div>Loading...</div>; // Or a placeholder component
+  }
+
   return (
     <section>
-      <Navigation1 />
-      <section className="mx-auto max-w-2xl px-4 sm:pb-6 lg:max-w-7xl lg:px-8">
-        <div className="mb-8 flex flex-wrap justify-between md:mb-16">
-          <div className="mb-6 flex w-full flex-col justify-center sm:mb-12 lg:mb-0 lg:w-1/3 lg:pb-24 lg:pt-48">
-            <h1 className="mb-4 text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 sm:text-5xl md:mb-8 md:text-6xl shadow-lg drop-shadow-xl">
-              Explore New Arrival
-            </h1>
+      <Navigation />
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        <div className="flex justify-center">
+          {product.imageUrl ? (
+            <Image
+              src={product.imageUrl}
+              alt={product.title}
+              width={300}
+              height={300}
+              objectFit="cover"
+              className="rounded-lg"
+            />
+          ) : (
+            <div className="bg-gray-200 h-64 w-full flex justify-center items-center text-gray-500">
+              No Image Available
+            </div>
+          )}
+        </div>
+        <div className="mt-6 bg-lime-100 p-6 rounded-lg shadow-lg">
+          <h1 className="text-4xl font-extrabold text-gray-900">{product.title}</h1>
+
+          <p className="text-lg text-gray-600 mt-4">{product.description}</p>
+
+          <div className="mt-6 flex items-center justify-between">
+            <span className="text-2xl font-semibold text-gray-800">${product.price}</span>
+
+            {product.discountPercentage && (
+              <div className="text-xl text-red-500 font-semibold">
+                <span className="line-through text-gray-500">
+                  ${(product.price + (product.price * product.discountPercentage) / 100).toFixed(2)}
+                </span>
+                <span> -{product.discountPercentage}%</span>
+              </div>
+            )}
+          </div>
+
+          <div className="mt-4">
+            {product.discountPercentage && (
+              <div className="bg-yellow-300 text-yellow-800 p-2 rounded-md text-center font-medium text-sm">
+                Special Offer: {product.discountPercentage}% OFF
+              </div>
+            )}
+          </div>
+
+          <div className="mt-6 flex justify-center">
+            <button
+              onClick={() => addToCart(product)}
+              className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
+            >
+              Add to Cart
+            </button>
           </div>
         </div>
-
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {data.map((product) => (
-  <div key={product._id} className="bg-white border rounded-lg shadow-md">
-    <div className="relative h-64 w-full">
-    {product.imageUrl ? (
-    <Image
-      src={product.imageUrl} // Corrected from product.imageUr to product.imageUrl
-      alt={product.title}
-      layout="fill"
-      objectFit="cover"
-      className="rounded-t-lg"
-    />
-  ) : (
-        <div className="bg-gray-200 flex justify-center items-center h-full text-gray-500">
-          No Image
-        </div>
-      )}
-    </div>
-    <div className="p-4">
-      <h3 className="text-xl font-semibold text-gray-900">{product.title}</h3>
-      <p className="text-green-600 mt-2 text-base font-sans font-medium">
-        {product.tags?.length > 0 ? product.tags.join(", ") : "No Tags"}
-      </p>
-      <p className="text-sm text-gray-800 mt-2 line-clamp-3">{product.description}</p>
-      <div className="mt-4 flex items-center justify-between">
-        <span className="text-lg font-semibold text-gray-800">${product.price}</span>
-        <button
-          onClick={() => addToCart(product)}
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-        >
-          Add to Cart
-        </button>
-
-        <Link href={`/products/${product._id}`}>
-          <button className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">
-            View Details
-          </button>
-        </Link>
-
       </div>
-    </div>
-  </div>
-))}
 
-        
-        </div>
-      </section>
-
+      {/* Cart button */}
       <div
         className="fixed bottom-4 right-4 bg-blue-500 text-white rounded-full p-4 cursor-pointer"
         onClick={toggleCart}
@@ -179,6 +173,7 @@ export default function Blog() {
         <span>{cart.length}</span> 🛒
       </div>
 
+      {/* Cart modal */}
       {showCart && (
         <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex items-center justify-center z-10">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
@@ -237,6 +232,7 @@ export default function Blog() {
         </div>
       )}
 
+      {/* Proceed to Checkout Button */}
       {cart.length > 0 && (
         <div className="fixed bottom-16 right-2 bg-green-500 text-white rounded-full p-4 cursor-pointer mb-6 hover:text-fuchsia-500 hover:bg-blue-500">
           <Link href="/checkout" className="px-1 py-2 rounded-lg text-white font-bold">
